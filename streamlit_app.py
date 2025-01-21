@@ -42,12 +42,12 @@ with tab2:
 
     selected_empresas = st.multiselect('Empresa', empresa_options)
     selected_nombre_documentos = st.multiselect('Nombre Documento', nombre_documento_options)
-    selected_prefijos = st.multiselect('Prefijo', prefijo_options)
+    selected_prefijos = st.multiselect('prefijo', prefijo_options)
 
     filtered_df = dfExistencias[
         (dfExistencias['Empresa'].isin(selected_empresas)) &
         (dfExistencias['Nombre_Documento'].isin(selected_nombre_documentos)) &
-        (dfExistencias['Prefijo'].isin(selected_prefijos))
+        (dfExistencias['prefijo'].isin(selected_prefijos))
     ]
 
     st.dataframe(filtered_df)
