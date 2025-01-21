@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import pyarrow.parquet as pq
 import requests
 
 st.set_page_config(
@@ -16,21 +17,37 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
 tab1, tab2 = st.tabs(["Promedios", "Existencias"])
 
 with tab1:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>PROMEDIOS</h1></div>", unsafe_allow_html=True)
-    
     gsheetid = '187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0'
     sheetod = '2086518071'
     url = f'https://docs.google.com/spreadsheets/d/{gsheetid}/export?format=csv&gid={sheetod}&format'
     dfDatos = pd.read_csv(url)
 
-    search_value = st.text_input("Buscar en autonumerico:")
-    if search_value:
-        filtered_df = dfDatos[dfDatos['Autonumerico'].astype(str).str.contains(search_value, case=False, na=False)]
-        st.dataframe(filtered_df)
+    st.dataframe(dfDatos)
 
 with tab2:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>EXISTENCIAS</h1></div>", unsafe_allow_html=True)
-    st.write("Aquí puedes agregar la lógica para la pestaña 'Existencias'")
+    gsheetid2 = 'another_google_sheet_id'
+    sheetod2 = 'another_sheet_id'
+    url2 = f'https://docs.google.com/spreadsheets/d/{gsheetid2}/export?format=csv&gid={sheetod2}&format'
+    dfExistencias = pd.read_csv(url2)
+
+    empresa_options = dfExistencias['Empresa'].unique().tolist()
+    nombre_documento_options = dfExistencias['Nombre_Documento'].unique().tolist()
+    prefijo_options = dfExistencias['Prefijo'].unique().tolist()
+
+    selected_empresa = st.selectbox('Empresa', empresa_options)
+    selected_nombre_documento = st.selectbox('Nombre Documento', nombre_documento_options)
+    selected_prefijo = st.selectbox('Prefijo', prefijo_options)
+
+    filtered_df = dfExistencias[
+        (dfExistencias['Empresa'] == selected_empresa) &
+        (dfExistencias['Nombre_Documento'] == selected_nombre_documento) &
+        (dfExistencias['Prefijo'] == selected_prefijo)
+    ]
+
+    st.dataframe(filtered_df)
