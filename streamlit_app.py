@@ -19,10 +19,10 @@ with tab1:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>PROMEDIOS</h1></div>", unsafe_allow_html=True)
     st.dataframe(dfDatos)
 
-    autonumerico_values = dfDatos['autonumerico'].unique()
+    autonumerico_values = dfDatos['Autonumerico'].unique()
     selected_value = st.selectbox('Selecciona un valor de autonumerico:', autonumerico_values)
     
-    filtered_df = dfDatos[dfDatos['autonumerico'] == selected_value]
+    filtered_df = dfDatos[dfDatos['Autonumerico'] == selected_value]
     st.dataframe(filtered_df)
 
 with tab2:
