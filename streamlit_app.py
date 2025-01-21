@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 url_carteras = {
-    "INVENTARIO": "https://drive.usercontent.google.com/u/0/uc?id=187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0&export=download"
+    "INVENTARIO": "https://docs.google.com/spreadsheets/d/187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0/edit?gid=2086518071#gid=2086518071"
 }
 
 st.markdown("""
