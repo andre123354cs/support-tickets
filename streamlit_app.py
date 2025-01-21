@@ -33,9 +33,9 @@ with tab1:
     nombre_documento_options = dfExistencias['Nombre_Documento'].unique().tolist()
     prefijo_options = dfExistencias['prefijo'].unique().tolist()
 
-    selected_empresa = st.multiselect('Empresa', empresa_options)
-    selected_nombre_documento = st.multiselect('Nombre Documento', nombre_documento_options)
-    selected_prefijo = st.multiselect('Prefijo', prefijo_options)
+    selected_empresa = st.select('Empresa', empresa_options)
+    selected_nombre_documento = st.select('Nombre Documento', nombre_documento_options)
+    selected_prefijo = st.select('Prefijo', prefijo_options)
 
     filtered_df = dfExistencias[
         (dfExistencias['Empresa'] == selected_empresa) &
