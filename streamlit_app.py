@@ -20,13 +20,6 @@ st.markdown("""
 
 tab1, tab2 = st.tabs(["Promedios", "Existencias"])
 
-def load_parquet(url):
-    response = requests.get(url)
-    with open('temp.parquet', 'wb') as f:
-        f.write(response.content)
-    df = pd.read_parquet('temp.parquet')
-    return df
-
 with tab1:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>PROMEDIOS</h1></div>", unsafe_allow_html=True)
     cartera = st.selectbox('Selecciona una cartera:', list(url_carteras.keys()))
