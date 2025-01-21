@@ -28,7 +28,7 @@ with tab1:
 
     search_value = st.text_input("Buscar en autonumerico:")
     if search_value:
-        filtered_df = dfDatos[dfDatos['autonumerico'].astype(str).str.contains(search_value, case=False, na=False)]
+        filtered_df = dfDatos[dfDatos['Autonumerico'].astype(str).str.contains(search_value, case=False, na=False)]
         st.dataframe(filtered_df)
 
 with tab2:
