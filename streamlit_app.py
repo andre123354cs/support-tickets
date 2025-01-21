@@ -4,8 +4,6 @@ import streamlit as st
 import pandas as pd
 import locale
 import pyarrow.parquet as pq
-import plotly.express as px
-import plotly.graph_objects as go
 import numpy as np
 import pyrebase
 
