@@ -35,7 +35,11 @@ tab1, tab2 = st.tabs(["Promedios", "Existencias"]) # Contenido para la pestaña 
 with tab1: 
     
         st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>PROMEDIOS</h1></div>", unsafe_allow_html=True) 
-    
+        productos_unicos = df['PRODUCTO'].unique()
+        productos_seleccionados = st.selectbox('Selecciona Una Cartera:            ', productos_unicos)
+        df_filtrado = df[df['PRODUCTO'] == productos_seleccionados]
+
+
 with tab2: 
         st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>EXISTENCIAS</h1></div>", unsafe_allow_html=True)
         
