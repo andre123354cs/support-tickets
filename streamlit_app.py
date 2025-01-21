@@ -29,5 +29,7 @@ with tab1:
 
     st.dataframe(dfDatos)
 
+    
+
 with tab2:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>EXISTENCIAS</h1></div>", unsafe_allow_html=True)
