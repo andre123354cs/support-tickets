@@ -21,11 +21,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div style='text-align: center;'>
-    <h1 style='color: #005780; font-size: 30px;'>INVENTARIOS</h1>
-</div>
-""", unsafe_allow_html=True)
 
 tab1, tab2 = st.tabs(["Promedios", "Existencias"])
 
