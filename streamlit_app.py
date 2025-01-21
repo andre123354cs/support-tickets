@@ -43,7 +43,7 @@ with tab1:
         (dfExistencias['Descripcion_Grupo_Dos'].isin(selected_Grupo))
     ]
 
-        st.dataframe(dfDatos, use_container_width=True)
+    st.dataframe(dfDatos, use_container_width=True)
 
 with tab2:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>PROMEDIOS</h1></div>", unsafe_allow_html=True)
