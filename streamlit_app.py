@@ -26,8 +26,6 @@ with tab1:
     url = f'https://docs.google.com/spreadsheets/d/{gsheetid}/export?format=csv&gid={sheetod}&format'
     dfDatos = pd.read_csv(url)
 
-    st.dataframe(dfDatos)
-
     search_value = st.text_input("Buscar en autonumerico:")
     if search_value:
         filtered_df = dfDatos[dfDatos['autonumerico'].astype(str).str.contains(search_value, case=False, na=False)]
