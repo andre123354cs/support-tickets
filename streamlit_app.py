@@ -9,7 +9,7 @@ st.set_page_config(
     )
 
 
-output_path = r"https://drive.google.com/file/d/15uNWVn2owbDShUzs4qpGEu04S6nIoS21/view?usp=sharing"
+output_path = r"https://docs.google.com/spreadsheets/d/187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0/edit?gid=2086518071#gid=2086518071"
 df = pd.read_csv(output_path)
 
 st.markdown(""" <div style='text-align: center; display: flex; align-items: center; justify-content: center;'> <h1 style='color: #005780; font-size: 40px;'>INVERSIONES JAY MORRIS SAS </h1> <img src='https://i0.wp.com/ijmsas.com/wp-content/uploads/2021/09/logo-ijm.png?resize=2048%2C2024&ssl=1' style='margin-left: 20px;' width='128' height='128'> </div> """, unsafe_allow_html=True)
