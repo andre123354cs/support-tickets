@@ -42,7 +42,8 @@ with tab1:
     filtered_df = dfExistencias[
         (dfExistencias['Empresa'].isin(selected_empresas)) &
         (dfExistencias['Nombre_Documento'].isin(selected_nombre_documentos)) &
-        (dfExistencias['prefijo'].isin(selected_prefijos))
+        (dfExistencias['prefijo'].isin(selected_prefijos)) &
+        (dfExistencias['Grupo'].isin(selected_Grupo))
     ]
 
     st.dataframe(filtered_df)
