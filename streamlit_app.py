@@ -5,7 +5,6 @@ import pandas as pd
 import locale
 import pyarrow.parquet as pq
 import numpy as np
-import pyrebase
 
 st.set_page_config(
     page_title="MetaData",
