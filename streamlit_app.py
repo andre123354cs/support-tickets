@@ -15,7 +15,7 @@ st.set_page_config(
 
 
 url_carteras = {
-        "Comfama": r"https://drive.usercontent.google.com/u/0/uc?id=1ZBk8wgXGnyTGZKQxNQEmRTmpzTlqa9KO&export=download",
+        "Comfama": r"https://drive.usercontent.google.com/u/0/uc?id=187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0&export=download",
         "Azzorti": r"https://drive.usercontent.google.com/u/0/uc?id=1kxVQ7PvD9ueO8qqZdk9aZotYGVjiRq0Y&export=download",
         "Cueros": r"https://drive.usercontent.google.com/u/0/uc?id=1ffZu1qoNK5iBo7lSo8WbS1bKZRYaIbMK&export=download",
         "Keypagos" : r"https://drive.usercontent.google.com/u/0/uc?id=1zYX2uONwvxBolHPEl4pm3qVjFeTRXCrQ&export=download",
