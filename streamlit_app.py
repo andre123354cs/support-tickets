@@ -32,12 +32,12 @@ with tab1:
     empresa_options = dfExistencias['Empresa'].unique().tolist()
     nombre_documento_options = dfExistencias['Nombre_Documento'].unique().tolist()
     prefijo_options = dfExistencias['prefijo'].unique().tolist()
-    Grupo = dfExistencias['Descripcion_Grupo_Dos'].unique().tolist()
+    Grupo_options = dfExistencias['Descripcion_Grupo_Dos'].unique().tolist()
 
     selected_empresas = st.multiselect('Empresa', empresa_options)
     selected_nombre_documentos = st.multiselect('Nombre Documento', nombre_documento_options)
     selected_prefijos = st.multiselect('prefijo', prefijo_options)
-    selected_Grupo = st.multiselect('Grupo', Grupo)
+    selected_Grupo = st.multiselect('Grupo', Grupo_options)
 
     filtered_df = dfExistencias[
         (dfExistencias['Empresa'].isin(selected_empresas)) &
