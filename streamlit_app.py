@@ -38,7 +38,7 @@ with tab2:
 
     empresa_options = dfExistencias['Empresa'].unique().tolist()
     nombre_documento_options = dfExistencias['Nombre_Documento'].unique().tolist()
-    prefijo_options = dfExistencias['Prefijo'].unique().tolist()
+    prefijo_options = dfExistencias['prefijo'].unique().tolist()
 
     selected_empresa = st.selectbox('Empresa', empresa_options)
     selected_nombre_documento = st.selectbox('Nombre Documento', nombre_documento_options)
