@@ -31,8 +31,8 @@ with tab1:
 
 with tab2:
     st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>EXISTENCIAS</h1></div>", unsafe_allow_html=True)
-    gsheetid2 = 'another_google_sheet_id'
-    sheetod2 = 'another_sheet_id'
+    gsheetid2 = '187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0'
+    sheetod2 = '2086518071'
     url2 = f'https://docs.google.com/spreadsheets/d/{gsheetid2}/export?format=csv&gid={sheetod2}&format'
     dfExistencias = pd.read_csv(url2)
 
