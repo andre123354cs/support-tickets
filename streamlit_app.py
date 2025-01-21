@@ -47,7 +47,7 @@ with tab2:
     filtered_df = dfExistencias[
         (dfExistencias['Empresa'] == selected_empresa) &
         (dfExistencias['Nombre_Documento'] == selected_nombre_documento) &
-        (dfExistencias['Prefijo'] == selected_prefijo)
+        (dfExistencias['prefijo'] == selected_prefijo)
     ]
 
     st.dataframe(filtered_df)
