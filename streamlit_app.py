@@ -10,10 +10,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-url_carteras = {
-    "INVENTARIO": "https://docs.google.com/spreadsheets/d/187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0/edit?gid=2086518071#gid=2086518071"
-}
-
 st.markdown("""
 <div style='text-align: center; display: flex; align-items: center; justify-content: center;'>
     <h1 style='color: #005780; font-size: 40px;'>INVERSIONES JAY MORRIS SAS</h1>
