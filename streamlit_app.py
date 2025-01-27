@@ -1,56 +1,26 @@
-import streamlit as st
+from pymongo import MongoClient
 import pandas as pd
-import pyarrow.parquet as pq
-import requests
+import streamlit as st
 
-st.set_page_config(
-    page_title="MetaData",
-    page_icon=":chart_with_upwards_trend:",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+# Conexión a la base de datos
+def connect_to_mongo():
+    # Cambia por tu URL y base de datos
+    client = MongoClient("mongodb://137.184.143.185:27017?directConnection=true")
+    db = client["Metadata"]
+    collection = db["Comfama"]
+    return collection
 
-st.markdown("""
-<div style='text-align: center; display: flex; align-items: center; justify-content: center;'>
-    <h1 style='color: #005780; font-size: 40px;'>INVERSIONES JAY MORRIS SAS</h1>
-    <img src='https://i0.wp.com/ijmsas.com/wp-content/uploads/2021/09/logo-ijm.png?resize=2048%2C2024&ssl=1' style='margin-left: 20px;' width='128' height='128'>
-</div>
-""", unsafe_allow_html=True)
+# Leer documentos de MongoDB y cargar en un DataFrame
+def read_mongo_to_dataframe(filter={}):
+    collection = connect_to_mongo()
+    documents = collection.find(filter)
+    df = pd.DataFrame(documents)
+    if '_id' in df.columns:
+        df.drop('_id', axis=1, inplace=True)
+    return df
 
+df = read_mongo_to_dataframe()
 
-tab1, tab2 = st.tabs(["Promedios", "Existencias"])
-
-with tab1:
-    st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>PROMEDIOS 1</h1></div>", unsafe_allow_html=True)
-    gsheetid2 = '187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0'
-    sheetod2 = '2086518071'
-    url2 = f'https://docs.google.com/spreadsheets/d/{gsheetid2}/export?format=csv&gid={sheetod2}&format'
-    dfExistencias = pd.read_csv(url2)
-
-    empresa_options = dfExistencias['Empresa'].unique().tolist()
-    nombre_documento_options = dfExistencias['Nombre_Documento'].unique().tolist()
-    prefijo_options = dfExistencias['prefijo'].unique().tolist()
-    Grupo_options = dfExistencias['Descripcion_Grupo_Dos'].unique().tolist()
-
-    selected_empresas = st.multiselect('Empresa', empresa_options, default=empresa_options) 
-    selected_nombre_documentos = st.multiselect('Nombre Documento', nombre_documento_options, default=nombre_documento_options) 
-    selected_prefijos = st.multiselect('prefijo', prefijo_options, default=prefijo_options) 
-    selected_Grupo = st.multiselect('Grupos', Grupo_options, default=Grupo_options)
-    
-    filtered_df = dfExistencias[
-        (dfExistencias['Empresa'].isin(selected_empresas)) &
-        (dfExistencias['Nombre_Documento'].isin(selected_nombre_documentos)) &
-        (dfExistencias['prefijo'].isin(selected_prefijos)) &
-        (dfExistencias['Descripcion_Grupo_Dos'].isin(selected_Grupo))
-    ]
-
-    st.dataframe(filtered_df, use_container_width=True)
-
-with tab2:
-    st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>EXISTENCIAS</h1></div>", unsafe_allow_html=True)
-    gsheetid = '187dwusJTD2uEMOFNQb8735wvbj2cVSbaE_MytHQYdU0'
-    sheetod = '2086518071'
-    url = f'https://docs.google.com/spreadsheets/d/{gsheetid}/export?format=csv&gid={sheetod}&format'
-    dfDatos = pd.read_csv(url)
-
-    st.dataframe(dfDatos)
+# Ajustar DataFrame a Streamlit
+st.title("Visualización de Datos de MongoDB en Streamlit")
+st.dataframe(df)  # Eliminar los parámetros width y height para ajuste automático
