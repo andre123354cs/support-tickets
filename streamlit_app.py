@@ -33,7 +33,7 @@ st.set_page_config(
 
 st.markdown("""
 <div style='text-align: center; display: flex; align-items: center; justify-content: center;'>
-    <h1 style='color: #005780; font-size: 40px;'>INVERSIONES JAY MORRIS SAS</h1>
+    <h1 style='color: #005780; font-size: 40px;'>Metadata</h1>
     <img src='https://i0.wp.com/ijmsas.com/wp-content/uploads/2021/09/logo-ijm.png?resize=2048%2C2024&ssl=1' style='margin-left: 20px;' width='128' height='128'>
 </div>
 """, unsafe_allow_html=True)
