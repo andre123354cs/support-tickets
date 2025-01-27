@@ -6,46 +6,43 @@ import streamlit as st
 def connect_to_mongo():
     # Cambia por tu URL y base de datos
     client = MongoClient("mongodb://137.184.143.185:27017?directConnection=true")
-    db = client["Metadata"]
-    return db
+    db = client["Metadata"]  # Cambia por el nombre de tu base de datos
+    collection = db["Metadata"]  # Cambia por el nombre de tu colección
+    return collection
 
 # Leer documentos de MongoDB y cargar en un DataFrame
-def read_mongo_to_dataframe(collection_name, filter={}):
-    db = connect_to_mongo()
-    collection = db[collection_name]
+def read_mongo_to_dataframe(filter={}):
+    collection = connect_to_mongo()
+    # Leer todos los documentos que coincidan con el filtro
     documents = collection.find(filter)
+    
+    # Convertir los documentos en un DataFrame
     df = pd.DataFrame(documents)
+    
+    # Eliminar el campo '_id' que MongoDB agrega por defecto, si no lo necesitas
     if '_id' in df.columns:
         df.drop('_id', axis=1, inplace=True)
+    
     return df
 
-# DataFrames para las dos colecciones
-df_comfama = read_mongo_to_dataframe('Comfama')
-df_cueros = read_mongo_to_dataframe('Cueros')
+df = read_mongo_to_dataframe()
 
-# Configurar la página de Streamlit
-st.set_page_config(
-    page_title="MetaData",
-    page_icon=":chart_with_upwards_trend:",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+# Configuración de Streamlit
+st.title("Visualización de datos de MongoDB")
+tabs = st.tabs(["Tabla", "Descripción", "Filtro"])
 
-st.markdown("""
-<div style='text-align: center; display: flex; align-items: center; justify-content: center;'>
-    <h1 style='color: #005780; font-size: 40px;'>Metadata</h1>
-    <img src='https://i0.wp.com/ijmsas.com/wp-content/uploads/2021/09/logo-ijm.png?resize=2048%2C2024&ssl=1' style='margin-left: 20px;' width='128' height='128'>
-</div>
-""", unsafe_allow_html=True)
+with tabs[0]:
+    st.header("Tabla de datos")
+    st.dataframe(df)
 
-# Crear pestañas
-tab1, tab2 = st.tabs(["Comfama", "Cueros"])
+with tabs[1]:
+    st.header("Descripción de datos")
+    st.write(df.describe())
 
-with tab1:
-    st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>COMFAMA</h1></div>", unsafe_allow_html=True)
-    st.dataframe(df_comfama, use_container_width=True)
-
-with tab2:
-    st.markdown("<div style='text-align: center;'><h1 style='color: #005780; font-size: 30px;'>CUEROS</h1></div>", unsafe_allow_html=True)
-    st.dataframe(df_cueros, use_container_width=True)
-
+with tabs[2]:
+    st.header("Filtrar datos")
+    column = st.selectbox("Selecciona una columna", df.columns)
+    value = st.text_input("Introduce un valor para filtrar")
+    if value:
+        filtered_df = df[df[column].astype(str).str.contains(value)]
+        st.dataframe(filtered_df)
