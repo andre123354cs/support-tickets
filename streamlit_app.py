@@ -1,48 +1,83 @@
-from pymongo import MongoClient
-import pandas as pd
 import streamlit as st
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from datetime import datetime, timedelta
+import time
+import logging
 
-# Conexión a la base de datos
-def connect_to_mongo():
-    # Cambia por tu URL y base de datos
-    client = MongoClient("mongodb://137.184.143.185:27017?directConnection=true")
-    db = client["Metadata"]  # Cambia por el nombre de tu base de datos
-    collection = db["Metadata"]  # Cambia por el nombre de tu colección
-    return collection
+# Configuración de logging (se guarda en un archivo llamado 'app.log')
+logging.basicConfig(filename='app.log', level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Leer documentos de MongoDB y cargar en un DataFrame
-def read_mongo_to_dataframe(filter={}):
-    collection = connect_to_mongo()
-    # Leer todos los documentos que coincidan con el filtro
-    documents = collection.find(filter)
-    
-    # Convertir los documentos en un DataFrame
-    df = pd.DataFrame(documents)
-    
-    # Eliminar el campo '_id' que MongoDB agrega por defecto, si no lo necesitas
-    if '_id' in df.columns:
-        df.drop('_id', axis=1, inplace=True)
-    
-    return df
+TIMEOUT = 10
+MAX_REINTENTOS = 3
 
-df = read_mongo_to_dataframe()
+def esperar_elemento_clickeable(by, locator):
+    return WebDriverWait(browser, TIMEOUT).until(EC.element_to_be_clickable((by, locator)))
 
-# Configuración de Streamlit
-st.title("Visualización de datos de MongoDB")
-tabs = st.tabs(["Tabla", "Descripción", "Filtro"])
+def esperar_elemento_presente(by, locator):
+    return WebDriverWait(browser, TIMEOUT).until(EC.presence_of_element_located((by, locator)))
 
-with tabs[0]:
-    st.header("Tabla de datos")
-    st.dataframe(df)
+def esperar_elemento_visible(by, locator):
+    return WebDriverWait(browser, TIMEOUT).until(EC.visibility_of_element_located((by, locator)))
 
-with tabs[1]:
-    st.header("Descripción de datos")
-    st.write(df.describe())
+def ejecutar_paso(descripcion, funcion, *args, **kwargs):
+    for intento in range(MAX_REINTENTOS):
+        try:
+            logging.info(f"Intentando: {descripcion} (Intento {intento+1}/{MAX_REINTENTOS})")
+            resultado = funcion(*args, **kwargs)
+            logging.info(f"Paso completado: {descripcion}")
+            return resultado
+        except Exception as e:
+            logging.error(f"Error en el paso: {descripcion} - {e}")
+            if intento < MAX_REINTENTOS - 1:
+                time.sleep(5)
+            else:
+                raise
 
-with tabs[2]:
-    st.header("Filtrar datos")
-    column = st.selectbox("Selecciona una columna", df.columns)
-    value = st.text_input("Introduce un valor para filtrar")
-    if value:
-        filtered_df = df[df[column].astype(str).str.contains(value)]
-        st.dataframe(filtered_df)
+def descargar_informe(usuario, clave):
+    """Función principal que contiene la lógica de Selenium."""
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless=new')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("--window-size=1920,1200")
+
+    global browser  # Declarar browser como variable global
+    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+    try:
+        ejecutar_paso("Abrir navegador", browser.get, 
+                      'https://novaventa.adminfo.net/smartplus/index.php?rtr=mantenimiento&ctr=autenticacion&acc=')
+
+        ejecutar_paso("Ingresar usuario", esperar_elemento_presente, By.NAME, "usuario").send_keys(usuario)
+        ejecutar_paso("Ingresar clave", esperar_elemento_presente, By.NAME, "clave").send_keys(clave)
+        ejecutar_paso("Hacer clic en Login", esperar_elemento_clickeable, By.CLASS_NAME, "botonLogin").click()
+
+        # ... (resto de los pasos de Selenium, usando ejecutar_paso como en el ejemplo anterior)
+
+        st.success("Informe descargado exitosamente.")
+        logging.info("Informe descargado exitosamente.")
+
+    except Exception as e:
+        st.error(f"Error al descargar el informe: {e}")
+        logging.exception("Error al descargar el informe:")
+    finally:
+        browser.quit()
+
+# Interfaz de Streamlit
+st.title("Descarga de Informe Novaventa")
+
+usuario = st.text_input("Usuario")
+clave = st.text_input("Clave", type="password")
+
+if st.button("Descargar Informe"):
+    if usuario and clave:
+        descargar_informe(usuario, clave)
+    else:
+        st.warning("Por favor, ingresa usuario y clave.")
