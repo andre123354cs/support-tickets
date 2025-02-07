@@ -41,17 +41,18 @@ if st.button("Consultar"):
     try:
         # Aplicar el filtro
         if filtro_seleccionado:
-            df_mostrar = df_filtro[df_filtro[columna_filtro].isin(filtro_seleccionado)]
+            df_filtrado = df_filtro[df_filtro[columna_filtro].isin(filtro_seleccionado)]
         else:
-            df_mostrar = df_filtro.copy()  # Mostrar todos los datos si no se selecciona filtro
+            df_filtrado = df_filtro.copy()  # Mostrar todos los datos si no se selecciona filtro
 
-        if not df_mostrar.empty:
-            st.dataframe(df_mostrar.style.set_properties(**{'width': '100%'}))
+        if not df_filtrado.empty:
+            # Mostrar una muestra de los datos
+            st.dataframe(df_filtrado.head(1000).style.set_properties(**{'width': '100%'}))  # Muestra las primeras 1000 filas
 
-            # Botón de descarga con delimitador "|" (descarga los datos filtrados)
+            # Botón de descarga con delimitador "|" (descarga los datos filtrados completos)
             st.download_button(
                 label="Descargar datos filtrados como CSV",
-                data=df_mostrar.to_csv(index=False, sep='|').encode('utf-8'),
+                data=df_filtrado.to_csv(index=False, sep='|').encode('utf-8'),
                 file_name=f'{coleccion_seleccionada}_filtrado.csv',
                 mime='text/csv',
             )
