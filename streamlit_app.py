@@ -8,7 +8,7 @@ db = client["CRM"]
 
 def cargar_datos(coleccion_nombre):
     coleccion = db[coleccion_nombre]
-    datos = list(coleccion.find())
+    datos = list(coleccion.find().limit(100))  # Limitar a 100 registros
     return pd.DataFrame(datos)
 
 # Título de la aplicación
@@ -25,10 +25,13 @@ if st.button("Consultar"):
     try:
         df = cargar_datos(coleccion_seleccionada)
         if not df.empty:
-            st.dataframe(df)
+            # Ajustar el ancho de la tabla al 100%
+            st.dataframe(df.style.set_properties(**{'width': '100%'}))
+
+            # Botón de descarga con delimitador "|"
             st.download_button(
                 label="Descargar datos como CSV",
-                data=df.to_csv(index=False).encode('utf-8'),
+                data=df.to_csv(index=False, sep='|').encode('utf-8'),  # Delimitador "|"
                 file_name=f'{coleccion_seleccionada}.csv',
                 mime='text/csv',
             )
