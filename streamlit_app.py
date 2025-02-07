@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from pymongo import MongoClient
 
+st.set_page_config(layout="wide")
+
 # Conexión a MongoDB
 client = MongoClient("mongodb://137.184.143.185:27017/?directConnection=true")
 db = client["CRM"]
