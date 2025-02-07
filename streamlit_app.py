@@ -6,32 +6,35 @@ from pymongo import MongoClient
 client = MongoClient("mongodb://137.184.143.185:27017/?directConnection=true")
 db = client["CRM"]
 
-def cargar_datos(coleccion_nombre):
+def cargar_datos(coleccion_nombre, limit=100):  # Nuevo parámetro 'limit'
     coleccion = db[coleccion_nombre]
-    datos = list(coleccion.find().limit(100))  # Limitar a 100 registros
+    datos = list(coleccion.find().limit(limit))  # Limitar registros
     return pd.DataFrame(datos)
 
 # Título de la aplicación
 st.title("Consulta de Colecciones CRM")
 
-# Colecciones específicas que quieres mostrar
+# Colecciones a mostrar
 colecciones_a_mostrar = ["Actualizacion", "Demograficos"]
 
-# Selector de colección (con las colecciones filtradas)
+# Selector de colección
 coleccion_seleccionada = st.selectbox("Seleccionar Colección", colecciones_a_mostrar)
 
 # Botón de consulta
 if st.button("Consultar"):
     try:
-        df = cargar_datos(coleccion_seleccionada)
-        if not df.empty:
-            # Ajustar el ancho de la tabla al 100%
-            st.dataframe(df.style.set_properties(**{'width': '100%'}))
+        # Mostrar tabla con límite de 100 registros
+        df_mostrar = cargar_datos(coleccion_seleccionada)
+        if not df_mostrar.empty:
+            st.dataframe(df_mostrar.style.set_properties(**{'width': '100%'}))
+
+            # Obtener todos los datos para la descarga
+            df_descargar = cargar_datos(coleccion_seleccionada, limit=0)  # limit=0 para traer todos los registros
 
             # Botón de descarga con delimitador "|"
             st.download_button(
-                label="Descargar datos como CSV",
-                data=df.to_csv(index=False, sep='|').encode('utf-8'),  # Delimitador "|"
+                label="Descargar todos los datos como CSV",
+                data=df_descargar.to_csv(index=False, sep='|').encode('utf-8'),
                 file_name=f'{coleccion_seleccionada}.csv',
                 mime='text/csv',
             )
