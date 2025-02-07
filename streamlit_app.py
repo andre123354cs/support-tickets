@@ -24,24 +24,36 @@ colecciones_a_mostrar = ["Actualizacion", "Demograficos"]
 # Selector de colección
 coleccion_seleccionada = st.selectbox("Seleccionar Colección", colecciones_a_mostrar)
 
-# Obtener los datos únicos para el filtro
+# Obtener los datos únicos para los filtros
 if coleccion_seleccionada == "Actualizacion":
-    columna_filtro = "Info_Carpeta_Archivo_x"
+    columna_filtro_1 = "Info_Carpeta_Archivo_x"
+    columna_filtro_2 = "numero_traslado"  # Nuevo filtro para "Actualizacion"
 elif coleccion_seleccionada == "Demograficos":
-    columna_filtro = "Info_Carpeta_Archivo"
+    columna_filtro_1 = "Info_Carpeta_Archivo"
+    columna_filtro_2 = "estado"  # Nuevo filtro para "Demograficos"
 
 df_filtro = cargar_datos(coleccion_seleccionada)
-valores_unicos = df_filtro[columna_filtro].unique().tolist()
 
-# Filtro
-filtro_seleccionado = st.multiselect("Filtrar por " + columna_filtro, valores_unicos)
+valores_unicos_1 = df_filtro[columna_filtro_1].unique().tolist()
+valores_unicos_2 = df_filtro[columna_filtro_2].unique().tolist()  # Valores únicos para el nuevo filtro
+
+# Filtros
+filtro_seleccionado_1 = st.multiselect("Filtrar por " + columna_filtro_1, valores_unicos_1)
+filtro_seleccionado_2 = st.multiselect("Filtrar por " + columna_filtro_2, valores_unicos_2)  # Nuevo filtro
 
 # Botón de consulta
 if st.button("Consultar"):
     try:
-        # Aplicar el filtro
-        if filtro_seleccionado:
-            df_filtrado = df_filtro[df_filtro[columna_filtro].isin(filtro_seleccionado)]
+        # Aplicar los filtros
+        if filtro_seleccionado_1 and filtro_seleccionado_2:
+            df_filtrado = df_filtro[
+                (df_filtro[columna_filtro_1].isin(filtro_seleccionado_1)) &
+                (df_filtro[columna_filtro_2].isin(filtro_seleccionado_2))
+            ]
+        elif filtro_seleccionado_1:
+            df_filtrado = df_filtro[df_filtro[columna_filtro_1].isin(filtro_seleccionado_1)]
+        elif filtro_seleccionado_2:
+            df_filtrado = df_filtro[df_filtro[columna_filtro_2].isin(filtro_seleccionado_2)]
         else:
             df_filtrado = df_filtro.copy()  # Mostrar todos los datos si no se selecciona filtro
 
