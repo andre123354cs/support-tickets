@@ -17,55 +17,46 @@ logging.basicConfig(filename='app.log', level=logging.INFO,
 
 st.title("Descarga de Informe Novaventa")
 
-from pymongo import MongoClient
+import streamlit as st
 import pandas as pd
-import tkinter as tk
-from tkinter import ttk
+from pymongo import MongoClient
+
+# Conexión a MongoDB (misma URI que antes)
+client = MongoClient("mongodb://137.184.143.185/:27017/?directConnection=true")
+db = client["CRM"]
 
 def obtener_colecciones(db):
-    """Obtiene una lista de las colecciones en la base de datos."""
     return db.list_collection_names()
 
-def consultar_coleccion():
-    """Consulta la colección seleccionada y muestra los resultados en la tabla."""
-    coleccion_nombre = combo_colecciones.get()
-    if coleccion_nombre:
-        coleccion = db[coleccion_nombre]
-        datos = list(coleccion.find())  # Obtener todos los documentos
-        df = pd.DataFrame(datos)
+def cargar_datos(coleccion_nombre):
+    coleccion = db[coleccion_nombre]
+    datos = list(coleccion.find())
+    return pd.DataFrame(datos)
 
-        # Limpiar la tabla anterior
-        for row in tabla.get_children():
-            tabla.delete(row)
+# Título de la aplicación
+st.title("Consulta de Colecciones CRM")
 
-        # Insertar nuevos datos en la tabla
-        for _, row in df.iterrows():
-            tabla.insert("", tk.END, values=list(row))
-
-# Conexión a MongoDB
-client = MongoClient("mongodb://137.184.143.185/:27017/?directConnection=true")
-db = client["CRM"]  # Seleccionar la base de datos CRM
-
-# Crear ventana principal
-ventana = tk.Tk()
-ventana.title("Consulta de Colecciones CRM")
-
-# Etiqueta y ComboBox para seleccionar colección
-etiqueta_colecciones = ttk.Label(ventana, text="Seleccionar Colección:")
-etiqueta_colecciones.pack(pady=5)
-
+# Selector de colección
 colecciones = obtener_colecciones(db)
-combo_colecciones = ttk.Combobox(ventana, values=colecciones)
-combo_colecciones.pack(pady=5)
-combo_colecciones.current(0)  # Seleccionar la primera colección por defecto
+coleccion_seleccionada = st.selectbox("Seleccionar Colección", colecciones)
 
 # Botón de consulta
-boton_consulta = ttk.Button(ventana, text="Consultar", command=consultar_coleccion)
-boton_consulta.pack(pady=10)
+if st.button("Consultar"):
+    try:
+        df = cargar_datos(coleccion_seleccionada)
+        if not df.empty:  # Verifica si el DataFrame no está vacío
+            st.dataframe(df)  # Muestra la tabla
+            # Botón de descarga (opcional)
+            st.download_button(
+                label="Descargar datos como CSV",
+                data=df.to_csv(index=False).encode('utf-8'),  # index=False para no guardar el índice
+                file_name=f'{coleccion_seleccionada}.csv',  # Nombre del archivo basado en la colección
+                mime='text/csv',
+            )
+        else:
+            st.warning("La colección seleccionada no tiene datos.")  # Mensaje si no hay datos
+    except Exception as e:
+        st.error(f"Error al consultar la colección: {e}")  # Muestra el error específico
 
-# Tabla para mostrar los datos
-tabla = ttk.Treeview(ventana, columns=[], show="headings")
-tabla.pack()
-
-# Ejecutar la aplicación
-ventana.mainloop()
+# Cerrar la conexión a MongoDB al finalizar (buena práctica)
+client.close()
