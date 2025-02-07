@@ -34,8 +34,13 @@ elif coleccion_seleccionada == "Demograficos":
 
 df_filtro = cargar_datos(coleccion_seleccionada)
 
-valores_unicos_1 = df_filtro[columna_filtro_1].unique().tolist()
-valores_unicos_2 = df_filtro[columna_filtro_2].unique().tolist()  # Valores únicos para el nuevo filtro
+print(df_filtro.columns)  # Imprime los nombres de las columnas para verificar
+print(df_filtro.head())    # Imprime las primeras filas para inspeccionar los datos
+print(df_filtro.info())    # Imprime información sobre el DataFrame
+
+# Solución al KeyError: verifica si la columna existe antes de acceder a ella
+valores_unicos_2 = df_filtro.get(columna_filtro_2).unique().tolist() if columna_filtro_2 in df_filtro.columns else []
+valores_unicos_1 = df_filtro[columna_filtro_1].unique().tolist() if columna_filtro_1 in df_filtro.columns else []
 
 # Filtros
 filtro_seleccionado_1 = st.multiselect("Filtrar por " + columna_filtro_1, valores_unicos_1)
