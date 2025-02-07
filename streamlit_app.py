@@ -16,7 +16,7 @@ def cargar_datos(coleccion_nombre, limit=0):
     return pd.DataFrame(datos)
 
 # Título de la aplicación
-st.title("Consulta de Colecciones CRM")
+st.title("Novaventa Colombia")
 
 # Colecciones a mostrar
 colecciones_a_mostrar = ["Actualizacion", "Demograficos"]
