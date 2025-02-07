@@ -8,7 +8,9 @@ st.set_page_config(layout="wide")
 client = MongoClient("mongodb://137.184.143.185:27017/?directConnection=true")
 db = client["CRM"]
 
-def cargar_datos(coleccion_nombre, limit=0):  # Limit 0 por defecto para traer todos los datos
+# Función para cargar datos con caché
+@st.cache_data
+def cargar_datos(coleccion_nombre, limit=0):
     coleccion = db[coleccion_nombre]
     datos = list(coleccion.find().limit(limit))
     return pd.DataFrame(datos)
