@@ -27,7 +27,7 @@ coleccion_seleccionada = st.selectbox("Seleccionar Colección", colecciones_a_mo
 # Obtener los datos únicos para los filtros
 if coleccion_seleccionada == "Actualizacion":
     columna_filtro_1 = "Info_Carpeta_Archivo_x"
-    columna_filtro_2 = "numero_traslado"  # Nuevo filtro para "Actualizacion"
+    columna_filtro_2 = "Numero Traslado"  # Nuevo filtro para "Actualizacion"
 elif coleccion_seleccionada == "Demograficos":
     columna_filtro_1 = "Info_Carpeta_Archivo"
     columna_filtro_2 = "estado"  # Nuevo filtro para "Demograficos"
